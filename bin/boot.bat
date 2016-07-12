@@ -128,17 +128,33 @@ if ( ! fso.FolderExists(wkdr) ) {
   var prev  = base + "\\daily\\prev"
   var today = base + '\\daily\\today';
 
-  // Prevリンク削除
-  shell.Run( 'cmd /C rmdir     "'+prev +'"'           ,0 );
-  WScript.Echo('rmdir     "'+prev +'"');
-  WScript.Sleep( 1000 );
-  
-  shell.Run( 'cmd /C rename    "'+today+'" "'+prev+'"',0 );
-  WScript.Echo('rename    "'+today+'" "'+prev+'"');
-  WScript.Sleep( 1000 );
+  shell.CurrentDirectory = base + '\\daily'
 
-  shell.Run( 'cmd /C mklink /D "'+today+'" "'+wkdr+'"',0 );
-  WScript.Echo('mklink /D "'+today+'" "'+wkdr+'"');
+  // Prevリンク削除
+  if ( fso.FolderExists(prev) ){
+    shell.Run('cmd /C rmdir prev',0 );
+    WScript.Echo(    'rmdir prev');
+    while( fso.FolderExists(prev) ){
+      WScript.StdOut.Write(".");
+      WScript.Sleep(1000);
+    }
+    WScript.Echo("");
+  }
+  
+  if ( fso.FolderExists(today) ){
+    shell.Run('cmd /C rename today prev',0 );
+    WScript.Echo(    'rename today prev');
+    while( fso.FolderExists(today) ){
+      WScript.StdOut.Write(".");
+      WScript.Sleep(1000);
+    }
+    WScript.Echo("");
+  }
+
+  if ( ! fso.FolderExists(today) ){
+    shell.Run('cmd /C mklink /D today "'+wkdr+'"',0 );
+    WScript.Echo(    'mklink /D today "'+wkdr+'"');
+  }
 } else {
   WScript.Echo(wkdr + ' は作成済みです');
 }
