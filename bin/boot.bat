@@ -125,7 +125,7 @@ if ( ! fso.FolderExists(wkdr) ) {
   fso.CreateFolder(wkdr);
   
   // Prevリンク削除
-  var prev  = base + "\\daily\\prev"
+  var prev  = base + '\\daily\\prev';
   var today = base + '\\daily\\today';
 
   shell.CurrentDirectory = base + '\\daily'
